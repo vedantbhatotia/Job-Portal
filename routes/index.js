@@ -12,6 +12,16 @@ router.get('/auth/google',passport.authenticate('google',{
 }))
 router.get('/auth/google/redirect',passport.authenticate('google'),function(req,res){
     // return res.redirect('/dashboard');
-    res.send("reached");
+    return res.redirect('/dashboard');
 })
+router.get('/logout',passport.checkAuthentication,function(req,res){
+    req.logout((err) => {
+        if (err) {
+            console.error('Error during logout:', err);
+            return res.redirect('/'); // Handle error by redirecting to home or appropriate page
+        }
+        return res.redirect('/');
+    });
+})
+router.use('/dashboard',require('./dashboard'));
 module.exports = router;

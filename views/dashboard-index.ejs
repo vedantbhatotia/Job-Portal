@@ -1,0 +1,20 @@
+<div class="container">
+    <section class="user-info my-5">
+      <h2>Welcome, <%- user.username %>!</h2>
+      <p>Your Dashboard allows you to manage your job applications and profile.</p>
+    </section>
+  
+    <section class="job-search my-5">
+      <h2>Search for Jobs</h2>
+      <form action="/dashboard/search" method="get">
+        <input type="text" name="query" placeholder="Search by job title">
+        <button type="submit">Search</button>
+      </form>
+    </section>
+  
+    <section class="job-results my-5">
+      <h2>Job Search Results</h2>
+      <!-- Display job search results here -->
+      <!-- Assuming jobResult is an array of job objects with pagination -->
+    </section>
+  </div>
