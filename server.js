@@ -4,6 +4,7 @@ const db = require('./config/mongoose');
 const expressLayouts = require('express-ejs-layouts');
 const passportMware = require('./config/passport');
 const passport = require('passport');
+const fetch = require('node-fetch');
 const path = require('path');
 const MongoStore = require('connect-mongo');
 const session = require('express-session');

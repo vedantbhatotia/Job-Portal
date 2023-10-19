@@ -18,6 +18,7 @@
     "express-session": "^1.17.3",
     "mongo-store": "^0.0.2",
     "mongoose": "^7.6.2",
+    "node-fetch": "^2.7.0",
     "nodemon": "^3.0.1",
     "passport": "^0.6.0",
     "passport-google-oauth20": "^2.0.0"
