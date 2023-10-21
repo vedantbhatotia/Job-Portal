@@ -15,8 +15,21 @@
   
     <section class="job-results my-5">
       <h2>Job Search Results</h2>
-      <!-- Display job search results here -->
-      <!-- Assuming jobResult is an array of job objects with pagination -->
+      <% if(jobResults){%>
+        <ul>
+          <% jobResults.forEach(function(job) { %>
+              <li>
+                  <h3><%= job.title %></h3>
+                  <p><strong>Company:</strong> <%= job.company.display_name %></p>
+                  <p><strong>Location:</strong> <%= job.location.display_name %></p>
+                  <p><strong>Category:</strong> <%= job.category.label %></p>
+                  <p><strong>Description:</strong> <%= job.description %></p>
+                  <a href="<%= job.redirect_url %>" target="_blank">Apply Now</a>
+              </li>
+          <% }); %>
+      </ul>
+      <%}%>
     </section>
+
 </div>
-<div class = ></div>
+

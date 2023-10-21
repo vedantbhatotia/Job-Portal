@@ -24,7 +24,8 @@ require('dotenv').config();
 router.get('/',passport.checkAuthentication,function(req,res){
     res.render('dashboard-index', {
         title: 'Your Dashboard',
-        layout:'../views/dashboard'
+        layout:'../views/dashboard',
+        jobResults:"",
     });
 })
 router.get('/search', async function (req, res) {
@@ -34,17 +35,21 @@ router.get('/search', async function (req, res) {
     const app_id = process.env.app_id
     const countryCode = countryCodes[Location.toLowerCase()];
     const adzunaBaseUrl = 'https://api.adzuna.com/v1/api/jobs/';
+
     try {
         if (!countryCode) {
             return res.status(400).send('Invalid location or country.');
         }
-        const fullURL = `${adzunaBaseUrl}${countryCode}/search/1?app_id=${app_id}&app_key=${api_key}&title_only=${Job_Title}`;
+        const fullURL = `${adzunaBaseUrl}${countryCode}/search/1?app_id=${app_id}&app_key=${api_key}&title_only=${Job_Title}&results_per_page=50`;
         const response = await fetch(fullURL);
+
         if (response.status === 200) {
             const jobResults = await response.json();
-            const results = jobResults["results"];
-            const one = results[1];
-            return res.json(one);
+            res.render('dashboard-index', {
+                title: 'Your Dashboard',
+                layout: '../views/dashboard',
+                jobResults: jobResults.results // Assuming results is the array in the API response
+            });
         } else {
             res.status(response.status).send('Failed to fetch job data.');
         }
@@ -53,6 +58,5 @@ router.get('/search', async function (req, res) {
         res.status(500).send('Internal server error');
     }
 });
-
 
 module.exports = router;
