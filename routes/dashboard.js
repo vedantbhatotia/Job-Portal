@@ -2,6 +2,24 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 const mongoose = require('mongoose');
+const countryCodes = {
+    "united states": "us",
+    "india": "in",
+    "united kingdom": "gb",
+    "canada": "ca",
+    "australia": "au",
+    "germany": "de",
+    "france": "fr",
+    "japan": "jp",
+    "china": "cn",
+    "brazil": "br",
+    "south africa": "za",
+    "mexico": "mx",
+    "russia": "ru",
+    "italy": "it",
+    "spain": "es"
+  };
+  
 require('dotenv').config();
 router.get('/',passport.checkAuthentication,function(req,res){
     res.render('dashboard-index', {
@@ -10,21 +28,31 @@ router.get('/',passport.checkAuthentication,function(req,res){
     });
 })
 router.get('/search', async function (req, res) {
-    const searchQuery = req.query.job; // Use req.query to access query parameters
-    const api_token = process.env.token;
-    const api_url = 'https://jobs.github.com/positions.json';
-    const fullURL = `${api_url}?description=${searchQuery}`;
-    const response = await fetch(fullURL,{
-        headers:{
-            Authorization:`Bearer${api_token}`
+    const Job_Title = req.query.job;
+    const Location = req.query.location;
+    const api_key = process.env.api_key;
+    const app_id = process.env.app_id
+    const countryCode = countryCodes[Location.toLowerCase()];
+    const adzunaBaseUrl = 'https://api.adzuna.com/v1/api/jobs/';
+    try {
+        if (!countryCode) {
+            return res.status(400).send('Invalid location or country.');
         }
-    })
-    if(response.staus === 200){
-        const jobResults = await response.json();
-        return res.json(jobResults);
-    }else{
-        res.status(response.status).send('Failed to fetch job data.');
+        const fullURL = `${adzunaBaseUrl}${countryCode}/search/1?app_id=${app_id}&app_key=${api_key}&title_only=${Job_Title}`;
+        const response = await fetch(fullURL);
+        if (response.status === 200) {
+            const jobResults = await response.json();
+            const results = jobResults["results"];
+            const one = results[1];
+            return res.json(one);
+        } else {
+            res.status(response.status).send('Failed to fetch job data.');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).send('Internal server error');
     }
-  });
-  
+});
+
+
 module.exports = router;
