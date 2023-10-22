@@ -40,7 +40,7 @@ router.get('/search', async function (req, res) {
         if (!countryCode) {
             return res.status(400).send('Invalid location or country.');
         }
-        const fullURL = `${adzunaBaseUrl}${countryCode}/search/1?app_id=${app_id}&app_key=${api_key}&title_only=${Job_Title}&results_per_page=50`;
+        const fullURL = `${adzunaBaseUrl}${countryCode}/search/1?app_id=${app_id}&app_key=${api_key}&title_only=${Job_Title}&results_per_page=40`;
         const response = await fetch(fullURL);
 
         if (response.status === 200) {

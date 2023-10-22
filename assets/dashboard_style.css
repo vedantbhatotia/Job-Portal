@@ -1,0 +1,11 @@
+.job-posting {
+     /* Add a border around each job posting */
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: bisque;
+}
+
+.job-posting.even {
+    background-color:sandybrown;
+     /* Even rows have a light background color */
+}

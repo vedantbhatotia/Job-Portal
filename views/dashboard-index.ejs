@@ -1,35 +1,44 @@
 <div class="container">
-    <section class="user-info my-5">
-      <h2>Welcome, <%- user.username %>!</h2>
+  <section class="user-info my-5">
+      <h2>Welcome,<%- user.username %>!</h2>
       <p>Your Dashboard allows you to manage your job applications and profile.</p>
-    </section>
-  
-    <section class="job-search my-5">
+  </section>
+
+  <section class="job-search my-5">
       <h2>Search for Jobs</h2>
       <form action="/dashboard/search" method="get">
-        <input type="text" name="job" placeholder="Search by job title">
-        <input type = "text" name = "location" placeholder = "Enter Location">
-        <button type="submit">Search</button>
+          <div class="row">
+              <div class="col-md-6">
+                  <input type="text" class="form-control" name="job" placeholder="Search by job title">
+              </div>
+              <div class="col-md-6">
+                  <input type="text" class="form-control" name="location" placeholder="Enter Location">
+              </div>
+              <div class="col-md-12 mt-3">
+                  <button type="submit" class="btn btn-primary">Search</button>
+              </div>
+          </div>
       </form>
-    </section>
-  
-    <section class="job-results my-5">
-      <h2>Job Search Results</h2>
-      <% if(jobResults){%>
-        <ul>
-          <% jobResults.forEach(function(job) { %>
-              <li>
+  </section>
+
+  <section class="job-results my-5">
+      <% if(jobResults) { %>
+        <h2 style = "font-size:40px">Job Search Results</h2>
+          <% jobResults.forEach(function(job, index) { %>
+              <div class="job-posting <%= index % 2 === 0 ? 'even' : 'odd' %>">
                   <h3><%= job.title %></h3>
                   <p><strong>Company:</strong> <%= job.company.display_name %></p>
                   <p><strong>Location:</strong> <%= job.location.display_name %></p>
-                  <p><strong>Category:</strong> <%= job.category.label %></p>
-                  <p><strong>Description:</strong> <%= job.description %></p>
-                  <a href="<%= job.redirect_url %>" target="_blank">Apply Now</a>
-              </li>
+                  <p><strong>Description:</strong>
+                    <% if (job.description.length > 200) { %>
+                      <%= job.description.substring(0, 200) %> ...
+                    <% } else { %>
+                      <%= job.description %>
+                    <% } %>
+                    </p>
+                  <a href="<%= job.redirect_url %>" target="_blank" class="btn btn-primary">Apply Now</a>
+              </div>
           <% }); %>
-      </ul>
-      <%}%>
-    </section>
-
+      <% } %>
+  </section>
 </div>
-
