@@ -19,15 +19,22 @@
       <h2>About Us</h2>
       <p>We are dedicated to connecting tech enthusiasts with their ideal job roles. Our platform simplifies the job search process, making it easier for you to find the perfect tech job.</p>
     </section>
-  
     <section class="newsletter my-5">
       <h2>Stay Updated</h2>
-      <p>Subscribe to our newsletter to receive the latest job listings and industry updates.</p>
-      <form class="d-flex">
-        <input type="email" class="form-control me-2" placeholder="Your email">
-        <button type="submit" id = "new" class="btn btn-primary">Subscribe</button>
-      </form>
+      <p>Subscribe to our newsletter to enjoy the following benefits:</p>
+      <ul>
+        <li>Exclusive access to premium job listings.</li>
+        <li>Early notifications about new job opportunities.</li>
+        <li>Insider industry updates and tips.</li>
+        <li>Special offers and discounts.</li>
+      </ul>
+      <form action="/create-checkout-session" method="POST">
+        <input type="hidden" name="price_id" value="199">
+        <button class="btn btn-primary btn-lg">Subscribe @ 199/-</button>
+    </form>
+    
     </section>
+    
   </div>
   
   
