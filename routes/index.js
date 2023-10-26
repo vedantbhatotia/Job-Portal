@@ -3,28 +3,51 @@ const router = express.Router();
 const passport = require('passport');
 const stripe = require('stripe')(process.env.key);
 // all the base routes will be handled by this file and all the user specific routes will be handled by the users.js routes
-router.post('/create-checkout-session', async (req, res) => {
+function custom(req,res,next){
+    if(req.isAuthenticated()){
+        return next();
+    }else{
+        return res.redirect('/auth/google');
+    }
+}
+router.post('/create-checkout-session',custom,async (req, res) => {
     try {
         const { price_id } = req.body;
         const session = await stripe.checkout.sessions.create({
             mode: 'payment',
             payment_method_types: ['card'],
             line_items: [{
-                price: 'price_1O4jBFSEuhAtBLixkYN2e5Jf', // Use the provided price_id
+                price: 'price_1O4jBFSEuhAtBLixkYN2e5Jf',
                 quantity: 1,
             }],
             success_url:'http://localhost:8000/success',
             cancel_url: 'http://localhost:8000/failure',
         });
+        const user = req.user;
+        user.isSubscribed = true;
+        await user.save();
         res.redirect(303, session.url);
     } catch (error) {
         console.error('Error creating checkout session:', error);
         res.status(500).send('Internal server error');
     }
 });
-router.get('/success',function(req,res){
-    return res.send("hello payment successfull");
-})
+router.get('/success', custom, function(req, res) {
+    try {
+        const user = req.user;
+
+        if (user.isSubscribed) {
+            return res.send(`Welcome, ${user.username}! Payment successful.`);
+        } else {
+            return res.status(403).send('Unauthorized: Payment status is not valid.');
+        }
+    } catch (error) {
+        console.error('Error checking payment status:', error);
+        res.status(500).send('Internal server error');
+    }
+
+});
+
 router.get('/failure',function(req,res){
     return res.send("sorry payment failed");
 })

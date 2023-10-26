@@ -26,6 +26,17 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/logout">Logout</a>
                 </li>
+                <% if (!user.isSubscribed) { %>
+                    <form action="/create-checkout-session" method="POST">
+                        <input type="hidden" name="price_id" value="199">
+                        <button class = "nav-link">Subscribe @ 199/-</button>
+                    </form>
+                <% }else{%>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Get the Latest Tech News</a>
+                    </li>
+                <%}%>
+                
             </ul>
         </div>
     </nav>

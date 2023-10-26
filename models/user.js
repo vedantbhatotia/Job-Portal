@@ -7,6 +7,10 @@ const UserSchema = new mongoose.Schema({
     googleID:{
         type:String,
         required:true
+    },
+    isSubscribed:{
+        type: Boolean,
+        default: false 
     }
 },{
     timestamps:true

@@ -16,7 +16,8 @@ passport.use(new GoogleStrategy({
     } else {
         const newUser = new User({
             username: profile.displayName,
-            googleID: profile.id
+            googleID: profile.id,
+            isSubscribed:false
         });
         await newUser.save();
         console.log(newUser);
