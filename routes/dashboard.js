@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
+const countryList = require('country-list');
 const mongoose = require('mongoose');
 const countryCodes = {
     "united states": "us",
@@ -58,5 +59,23 @@ router.get('/search', async function (req, res) {
         res.status(500).send('Internal server error');
     }
 });
-
+router.get('/get-news',function(req,res){
+   return res.render('news-letter',{
+    title:'News Letter Page',
+    layout:'../views/news-letter-layout'
+   })
+})
+router.get('/search-news',function(req,res){
+    const location = req.query.location;
+    const api_key = process.env.news_key;
+    const country_code =  countryList.getCode(location);
+    // https://newsapi.org/v2/top-headlines?country=in&category=technology&apiKey=2e3c3fe1d98b4d5690f981a46dcacdf3
+    if (country_code) {
+        const lowercaseIsoCode = country_code.toLowerCase();
+        console.log(`ISO Country Code (in lowercase) for ${location} is: ${lowercaseIsoCode}`)
+      } else {
+        console.log(`Country not found`);
+    }
+    return res.send("sent");
+})
 module.exports = router;
