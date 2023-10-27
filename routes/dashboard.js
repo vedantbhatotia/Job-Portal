@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
+const customMiddleware = require('../config/custom_middleware');
 const countryList = require('country-list');
 const mongoose = require('mongoose');
 const countryCodes = {
@@ -29,7 +30,7 @@ router.get('/',passport.checkAuthentication,function(req,res){
         jobResults:"",
     });
 })
-router.get('/search', async function (req, res) {
+router.get('/search',passport.checkAuthentication,async function (req, res) {
     const Job_Title = req.query.job;
     const Location = req.query.location;
     const api_key = process.env.api_key;
@@ -49,8 +50,7 @@ router.get('/search', async function (req, res) {
             res.render('dashboard-index', {
                 title: 'Your Dashboard',
                 layout: '../views/dashboard',
-                jobResults: jobResults.results // Assuming results is the array in the API response
-            });
+                jobResults: jobResults.results})
         } else {
             res.status(response.status).send('Failed to fetch job data.');
         }
@@ -59,7 +59,7 @@ router.get('/search', async function (req, res) {
         res.status(500).send('Internal server error');
     }
 });
-router.get('/get-news',function(req,res){
+router.get('/get-news',customMiddleware.check,function(req,res){
    return res.render('news-letter',{
     title:'News Letter Page',
     layout:'../views/news-letter-layout',
@@ -67,7 +67,7 @@ router.get('/get-news',function(req,res){
     extractedDate:"",
    })
 })
-router.get('/search-news',async function(req,res){
+router.get('/search-news',customMiddleware.check,async function(req,res){
     const location = req.query.location;
     const api_key = process.env.news_key;
     const country_code = countryCodes[location.toLowerCase()];
@@ -77,11 +77,6 @@ router.get('/search-news',async function(req,res){
         const response = await fetch(fullURL);
         if(response.status === 200){
             const news_results = await response.json();
-            // const publishedAt = news_results.articles.publishedAt;
-            // console.log(publishedAt);
-            // const date = new Date(publishedAt);
-            // console.log(date);
-            // const extractedDate = date.toISOString().split('T')[0];
             res.render('news-letter', {
                 title: 'News',
                 layout: '../views/news-letter-layout',
