@@ -62,20 +62,34 @@ router.get('/search', async function (req, res) {
 router.get('/get-news',function(req,res){
    return res.render('news-letter',{
     title:'News Letter Page',
-    layout:'../views/news-letter-layout'
+    layout:'../views/news-letter-layout',
+    NewsResults:"",
+    extractedDate:"",
    })
 })
-router.get('/search-news',function(req,res){
+router.get('/search-news',async function(req,res){
     const location = req.query.location;
     const api_key = process.env.news_key;
-    const country_code =  countryList.getCode(location);
-    // https://newsapi.org/v2/top-headlines?country=in&category=technology&apiKey=2e3c3fe1d98b4d5690f981a46dcacdf3
+    const country_code = countryCodes[location.toLowerCase()];
     if (country_code) {
         const lowercaseIsoCode = country_code.toLowerCase();
-        console.log(`ISO Country Code (in lowercase) for ${location} is: ${lowercaseIsoCode}`)
+        const fullURL =  `https://newsapi.org/v2/top-headlines?country=${lowercaseIsoCode}&category=technology&apiKey=2e3c3fe1d98b4d5690f981a46dcacdf3`
+        const response = await fetch(fullURL);
+        if(response.status === 200){
+            const news_results = await response.json();
+            // const publishedAt = news_results.articles.publishedAt;
+            // console.log(publishedAt);
+            // const date = new Date(publishedAt);
+            // console.log(date);
+            // const extractedDate = date.toISOString().split('T')[0];
+            res.render('news-letter', {
+                title: 'News',
+                layout: '../views/news-letter-layout',
+                NewsResults: news_results.articles,
+            });
+        }
       } else {
         console.log(`Country not found`);
     }
-    return res.send("sent");
 })
 module.exports = router;

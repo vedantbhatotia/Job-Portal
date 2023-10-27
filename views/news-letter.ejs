@@ -12,4 +12,18 @@
             </div>
         </form>
     </section>
+    <section class="job-results my-5">
+        <% if (NewsResults) { %>
+            <% NewsResults.forEach(function(news, index) { %>
+                <div class="job-posting <%= index % 2 === 0 ? 'even' : 'odd' %>">
+                    <h3><%= news.title %></h3>
+                    <p><strong>Published At:</strong><%= news.publishedAt.split('T')[0] %></p>
+                    <p><strong>Description:</strong> <%= news.description %></p>
+                    <p><strong>Content:</strong><%= news.content ? news.content.split('[')[0] : 'N/A' %></p>
+                    <a href="<%= news.url %>" target="_blank" class="btn btn-primary">Read Complete Article</a>
+                </div>
+            <% }); %>
+        <% } %>
+    </section>
+    
 </div>
