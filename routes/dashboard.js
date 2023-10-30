@@ -30,34 +30,37 @@ router.get('/',passport.checkAuthentication,function(req,res){
         jobResults:"",
     });
 })
-router.get('/search',passport.checkAuthentication,async function (req, res) {
+router.get('/search', passport.checkAuthentication, async function (req, res) {
     const Job_Title = req.query.job;
     const Location = req.query.location;
     const api_key = process.env.api_key;
     const app_id = process.env.app_id;
     const countryCode = countryCodes[Location.toLowerCase()];
-    const resultsPerPage = 50;
     const adzunaBaseUrl = 'https://api.adzuna.com/v1/api/jobs/';
 
     try {
         if (!countryCode) {
             return res.status(400).send('Invalid location or country.');
         }
-        const fullURL = `${adzunaBaseUrl}${countryCode}/search/1?app_id=${app_id}&app_key=${api_key}&title_only=${Job_Title}&results_per_page=${resultsPerPage}`;
-        console.log(fullURL);
+        const fullURL = `${adzunaBaseUrl}${countryCode}/search/1?app_id=${app_id}&app_key=${api_key}&title_only=${Job_Title}&results_per_page=60`;
+        // console.log(fullURL);
         const response = await fetch(fullURL);
-        // console.log(response);
+
         if (response.status === 200) {
             const jobResults = await response.json();
             const result_per_page_to_be_displayed = 5;
-            const start_index = req.query.index || 0;
-            const end_index = start_index + 4;
+            const start_index = parseInt(req.query.index) || 0;
+            const end_index = parseInt(start_index) + 4;
+            // console.log(start_index,end_index);
             res.render('dashboard-index', {
                 title: 'Your Dashboard',
                 layout: '../views/dashboard',
-                jobResults: jobResults.results.slice(start_index,end_index+1),
-                index:start_index,
-            })
+                jobResults: jobResults.results.slice(start_index, end_index + 1),
+                index: start_index,
+                Location,
+                Title: Job_Title,
+                result_per_page_to_be_displayed: 5, // Add this line
+            });
         } else {
             console.error('API Error Response:', await response.text());
             res.status(response.status).send('Failed to fetch job data.');
@@ -67,6 +70,7 @@ router.get('/search',passport.checkAuthentication,async function (req, res) {
         res.status(500).send('Internal server error');
     }
 });
+
 router.get('/get-news',customMiddleware.check,function(req,res){
    return res.render('news-letter',{
     title:'News Letter Page',

@@ -39,10 +39,15 @@
                   <a href="<%= job.redirect_url %>" target="_blank" class="btn btn-primary">Apply Now</a>
               </div>
           <% }); %>
-            <div class="pagination">
-                    <a href="?index=<%= index - 1 %>">Previous</a>
-                    <a href="?index=<%= index + 1 %>">Next</a>
-            </div>  
+          <div class="text-center">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination d-inline-flex">
+                    <li class="page-item"><a class="page-link" href="/dashboard/search/?index=<%= index - 5 %>&location=<%= encodeURIComponent(Location) %>&job=<%= encodeURIComponent(Title) %>">Previous</a></li>
+                    <li class="page-item"><a class="page-link" href="/dashboard/search/?index=<%= index + 5 %>&location=<%= encodeURIComponent(Location) %>&job=<%= encodeURIComponent(Title) %>">Next</a></li>
+                </ul>
+            </nav>
+        </div>
+        
       <% } %>
   </section>
 </div>
