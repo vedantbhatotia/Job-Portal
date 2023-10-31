@@ -88,11 +88,18 @@ router.get('/search-news',customMiddleware.check,async function(req,res){
         const fullURL =  `https://newsapi.org/v2/top-headlines?country=${lowercaseIsoCode}&category=technology&apiKey=2e3c3fe1d98b4d5690f981a46dcacdf3`
         const response = await fetch(fullURL);
         if(response.status === 200){
-            const news_results = await response.json();
+            const news_results = await response.json()
+            const result_per_page_to_be_displayed = 5;
+            const start_index = parseInt(req.query.index) || 0;
+            const end_index = parseInt(start_index) + 4;
+            const results = news_results.articles.slice(start_index,end_index+1);
             res.render('news-letter', {
                 title: 'News',
                 layout: '../views/news-letter-layout',
-                NewsResults: news_results.articles,
+                NewsResults: news_results.articles.slice(start_index,end_index+1),
+                index:start_index,
+                location,
+                result_per_page_to_be_displayed: 5
             });
         }
       } else {

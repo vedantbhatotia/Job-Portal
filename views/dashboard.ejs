@@ -24,7 +24,7 @@
                     <a class="nav-link" href="#">My Applications</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/logout">Logout</a>
+                    <a class="nav-link" href="#">Saved Articles</a>
                 </li>
                 <% if (!user.isSubscribed) { %>
                     <form action="/create-checkout-session" method="POST">
@@ -36,7 +36,9 @@
                         <a class="nav-link" href="/dashboard/get-news">Get the Latest Tech News</a>
                     </li>
                 <%}%>
-                
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">Logout</a>
+                </li>
             </ul>
         </div>
     </nav>

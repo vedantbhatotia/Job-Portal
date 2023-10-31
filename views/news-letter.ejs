@@ -23,6 +23,14 @@
                     <a href="<%= news.url %>" target="_blank" class="btn btn-primary">Read Complete Article</a>
                 </div>
             <% }); %>
+            <div class="text-center">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination d-inline-flex">
+                        <li class="page-item"><a class="page-link" href="/dashboard/search-news/?index=<%= index - 5 %>&location=<%= encodeURIComponent(location) %>">Previous</a></li>
+                        <li class="page-item"><a class="page-link" href="/dashboard/search-news/?index=<%= index + 5 %>&location=<%= encodeURIComponent(location) %>">Next</a></li>
+                    </ul>
+                </nav>
+            </div>
         <% } %>
     </section>
     
