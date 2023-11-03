@@ -106,4 +106,40 @@ router.get('/search-news',customMiddleware.check,async function(req,res){
         console.log(`Country not found`);
     }
 })
+router.get('/get-details',async function(req,res){
+    const id = req.query.job_id;
+    const Job_Title  = req.query.title;
+    const Location = req.query.location;
+    const api_key = process.env.api_key;
+    const app_id = process.env.app_id;
+    const countryCode = countryCodes[Location.toLowerCase()];
+    const adzunaBaseUrl = 'https://api.adzuna.com/v1/api/jobs/';
+    try {
+        if (!countryCode) {
+            return res.status(400).send('Invalid location or country.');
+        }
+        const fullURL = `${adzunaBaseUrl}${countryCode}/search/1?app_id=${app_id}&app_key=${api_key}&title_only=${Job_Title}&results_per_page=60`;
+        const response = await fetch(fullURL);
+        if (response.status === 200) {
+            const jobResults = await response.json();
+            const jobsArrays = jobResults.results;
+            
+            res.render('dashboard-index', {
+                title: 'Your Dashboard',
+                layout: '../views/dashboard',
+                jobResults: jobResults.results.slice(start_index, end_index + 1),
+                index: start_index,
+                Location,
+                Title: Job_Title,
+                result_per_page_to_be_displayed: 5, // Add this line
+            });
+        } else {
+            console.error('API Error Response:', await response.text());
+            res.status(response.status).send('Failed to fetch job data.');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).send('Internal server error');
+    }
+})
 module.exports = router;

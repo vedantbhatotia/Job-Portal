@@ -32,7 +32,7 @@ router.post('/create-checkout-session',custom,async (req, res) => {
         res.status(500).send('Internal server error');
     }
 });
-router.get('/success', custom, function(req, res) {
+router.get('/success',function(req, res) {
     try {
         const user = req.user;
 

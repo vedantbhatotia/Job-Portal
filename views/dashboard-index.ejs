@@ -29,6 +29,7 @@
                   <h3><%= job.title %></h3>
                   <p><strong>Company:</strong> <%= job.company.display_name %></p>
                   <p><strong>Location:</strong> <%= job.location.display_name %></p>
+                  <p><strong>HIEWF:</strong><%= job.id%></p>
                   <p><strong>Description:</strong>
                     <% if (job.description.length > 200) { %>
                       <%= job.description.substring(0, 200) %> ...
@@ -37,6 +38,12 @@
                     <% } %>
                     </p>
                   <a href="<%= job.redirect_url %>" target="_blank" class="btn btn-primary">Apply Now</a>
+                  <form action="/dashboard/get-details" method="get" style="display: inline-block">
+                    <input type="hidden" name="job_id" value="<%= job.id %>">
+                    <input type="hidden" name="title" value="<%= Title %>">
+                    <input type="hidden" name="location" value="<%= Location %>">
+                    <button type="submit" class="btn btn-primary">Read More</button>
+                  </form>                
               </div>
           <% }); %>
           <div class="text-center">
